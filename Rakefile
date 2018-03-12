@@ -9,7 +9,7 @@ task :build do
   system "mkdir build"
 
   puts "Building client..."
-  system "go build cmd/ultradeck-client/main.go"
+  system "go build main.go"
   system "mv main build/ultradeck"
   system "cp build/ultradeck /usr/local/bin/"
 end

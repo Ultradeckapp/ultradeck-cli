@@ -123,8 +123,8 @@ func (d *DeckConfigManager) PrepareJSONForUpload() []byte {
 	return j
 }
 
-func (d *DeckConfigManager) GetDeckID() int {
-	return d.DeckConfig.ID
+func (d *DeckConfigManager) GetDeckID() string {
+	return d.DeckConfig.UUID
 }
 
 func (d *DeckConfigManager) GetDeckShortUUID() string {
@@ -143,20 +143,20 @@ func (d *DeckConfigManager) ParseDeckMDFile() []*Slide {
 func (d *DeckConfigManager) ParseMarkdown(markdown string) []*Slide {
 	splitted := strings.Split(string(markdown), "---\n")
 	var slides []*Slide
+	var usedSlides []string
 
 	for i, markdown := range splitted {
 		// attempt to find the previous slide from the deckConfig
-		var previousSlide *Slide
+		var slideFromConfig *Slide
 		var firstSlide *Slide
 
 		if d.DeckConfig != nil {
 			firstSlide = d.DeckConfig.Slides[0]
 
 			for i := range d.DeckConfig.Slides {
-				if i == 0 {
-				}
-				if d.DeckConfig.Slides[i].Markdown == strings.TrimSpace(markdown) {
-					previousSlide = d.DeckConfig.Slides[i]
+				if d.DeckConfig.Slides[i].Markdown == strings.TrimSpace(markdown) && !contains(usedSlides, d.DeckConfig.Slides[i].UUID) {
+					slideFromConfig = d.DeckConfig.Slides[i]
+					usedSlides = append(usedSlides, slideFromConfig.UUID)
 				}
 			}
 		}
@@ -166,12 +166,12 @@ func (d *DeckConfigManager) ParseMarkdown(markdown string) []*Slide {
 			Position: (i + 1),
 		}
 
-		if previousSlide != nil {
-			newSlide.ID = previousSlide.ID
-			newSlide.UUID = previousSlide.UUID
-			newSlide.PresenterNotes = previousSlide.PresenterNotes
-			newSlide.ThemeName = previousSlide.ThemeName
-			newSlide.ColorVariation = previousSlide.ColorVariation
+		if slideFromConfig != nil {
+			newSlide.ID = slideFromConfig.ID
+			newSlide.UUID = slideFromConfig.UUID
+			newSlide.PresenterNotes = slideFromConfig.PresenterNotes
+			newSlide.ThemeName = slideFromConfig.ThemeName
+			newSlide.ColorVariation = slideFromConfig.ColorVariation
 		} else if firstSlide != nil {
 			newSlide.UUID = NewUUID()
 			newSlide.ThemeName = firstSlide.ThemeName
@@ -214,4 +214,13 @@ func (d *DeckConfigManager) FileExists() bool {
 		return false
 	}
 	return true
+}
+
+func contains(arr []string, str string) bool {
+	for _, a := range arr {
+		if a == str {
+			return true
+		}
+	}
+	return false
 }

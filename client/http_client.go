@@ -9,10 +9,8 @@ import (
 )
 
 const (
-	FrontendURL    = "https://app.ultradeck.co"
-	BackendURL     = "https://api.ultradeck.co"
-	DevFrontendURL = "http://localhost:3000"
-	DevBackendURL  = "http://localhost:3001"
+	BackendURL    = "https://api.ultradeck.co/"
+	DevBackendURL = "http://localhost:3001/"
 )
 
 type HttpClient struct {
@@ -22,20 +20,6 @@ type HttpClient struct {
 
 func NewHttpClient(token string) *HttpClient {
 	return &HttpClient{Token: token}
-}
-
-func GetBackendURL() string {
-	if os.Getenv("DEV_MODE") != "" {
-		return DevBackendURL
-	}
-	return BackendURL
-}
-
-func GetFrontendURL() string {
-	if os.Getenv("DEV_MODE") != "" {
-		return DevFrontendURL
-	}
-	return FrontendURL
 }
 
 func (h *HttpClient) GetRequest(path string) []byte {
@@ -51,8 +35,7 @@ func (h *HttpClient) PutRequest(path string, body []byte) []byte {
 }
 
 func (h *HttpClient) PerformRequest(path string, verb string, body []byte) []byte {
-
-	url := GetBackendURL() + path
+	url := h.backendURL() + path
 	client := &http.Client{}
 	req, _ := http.NewRequest(verb, url, bytes.NewBuffer(body))
 	DebugMsg("Verb is " + verb)
@@ -77,4 +60,12 @@ func (h *HttpClient) PerformRequest(path string, verb string, body []byte) []byt
 	defer h.Response.Body.Close()
 
 	return bodyBytes
+}
+
+func (h *HttpClient) backendURL() string {
+	if os.Getenv("DEV_MODE") != "" {
+		return DevBackendURL
+	} else {
+		return BackendURL
+	}
 }

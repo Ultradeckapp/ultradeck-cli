@@ -238,7 +238,7 @@ func TestNewDeck(t *testing.T) {
 	assert := assert.New(t)
 
 	manager := &DeckConfigManager{}
-	deck := manager.NewDeck("test title", "test description", true)
+	deck := manager.NewDeck("test title", "test description")
 
 	assert.Equal("test title", deck.Title)
 	assert.Equal("test description", deck.Description)

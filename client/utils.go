@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/twinj/uuid"
 )
@@ -12,7 +13,7 @@ func NewUUID() string {
 }
 
 func DebugMsg(msg string) {
-	if 1 == 0 {
+	if os.Getenv("ULTRADECK_DEBUG") != "" {
 		log.Println(msg)
 	}
 }

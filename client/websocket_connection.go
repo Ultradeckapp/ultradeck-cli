@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/url"
 	"os"
@@ -46,7 +47,7 @@ func (c *WebsocketConnection) OpenConnection() {
 	c.Interrupt = make(chan os.Signal, 1)
 	signal.Notify(c.Interrupt, os.Interrupt)
 
-	log.Printf("connecting to %s", c.serverURL())
+	DebugMsg(fmt.Sprintf("connecting to %s", c.serverURL()))
 
 	var err error
 	DebugMsg("Dialing...")
@@ -84,7 +85,7 @@ func (c *WebsocketConnection) RegisterListener(channel string) {
 }
 
 func (c *WebsocketConnection) Listen(rchan chan<- *Request) {
-	log.Println("Listening..")
+	fmt.Println("Listening..")
 	for {
 		_, message, err := c.Conn.ReadMessage()
 		DebugMsg("<Websocket> read message")
@@ -102,7 +103,13 @@ func (c *WebsocketConnection) Listen(rchan chan<- *Request) {
 }
 
 func (c *WebsocketConnection) serverURL() string {
-	addr := "localhost:8080"
-	u := url.URL{Scheme: "ws", Host: addr, Path: "/"}
-	return u.String()
+	if os.Getenv("DEV_MODE") != "" {
+		addr := "localhost:8080"
+		u := url.URL{Scheme: "ws", Host: addr, Path: "/"}
+		return u.String()
+	} else {
+		addr := "ws.ultradeck.co"
+		u := url.URL{Scheme: "ws", Host: addr, Path: "/"}
+		return u.String()
+	}
 }

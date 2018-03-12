@@ -131,7 +131,7 @@ func (a *AssetManager) uploadFile(fileName string, uploader *s3manager.Uploader)
 	file.Read(buffer)
 	fileBytes := bytes.NewReader(buffer)
 
-	bucketName := "ultradeck-assets-dev"
+	bucketName := a.getBucketName()
 	acl := "public-read"
 	mimeType := a.mimeType(fileName)
 
@@ -150,6 +150,13 @@ func (a *AssetManager) uploadFile(fileName string, uploader *s3manager.Uploader)
 
 	asset := &Asset{Filename: fileName, URL: result.Location}
 	return asset
+}
+
+func (a *AssetManager) getBucketName() string {
+	if os.Getenv("DEV_MODE") != "" {
+		return "ultradeck-assets-dev"
+	}
+	return "ultradeck-assets-prod"
 }
 
 func (a *AssetManager) readFiles() []string {
