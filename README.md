@@ -1,68 +1,137 @@
+This is the command-line utility for [Ultradeck](https://ultradeck.co).  `ultradeck` allows you to create and manipulate decks straight from your local machine in a seamless way.
 
+When a directory is under ultradeck control...
 
-# TODO next
+## Installation
 
-* [x] Implement pull
-* [x] Implement updated_at timestamp checking for push + pull
-* [x] create temporary security creds on app.ultradeck.co for CLI file uploads
-* [x] see TODOs in asset_manager to finish it up
-* [x] asset push / sync
-* [x] pull assets should pull remote assets only, not push local ones
-* [x] push assets should push local assets only, not pull remote ones
-* [ ] Force command to force-push or force-pull
-* [ ] Implement watch
-* [ ] webhook support on frontend to support auto-updating
-* [ ] Fix frontend (if needed b/c of potential breaking api changes)
+There are a couple of options to install:
 
-# TODO once almost done
+* If using homebrew, Ultradeck is available via `brew install ultradeck`.
+* You can download the binaries via the [Releases](https://github.com/gammons/ultradeck-cli/releases) page on Github.
+* If you're using Go, you can also run `go install github.com/gammons/ultradeck-cli` to install the binary for your system.
 
-* [ ] homebrew
-* [ ] other (legit) sites that host binaries
+## Quickstart tutorial
+
+1. **create a new deck using the cli.**,
+
+Run `ultradeck create` in a new directory.  Ultradeck will ask you your deck's title, description, and visibility setting.
+
+`ultradeck` will create 2 files in your directory:
+
+1. deck.md <- this is your deck.
+2. .ud.json <- this is the internal file that keeps your deck in sync with what is on the [ultradeck.co](https://ultradeck.co) webapp.
+
+2. **Open up the ultradeck editor webapp**
+
+In your directory, run `ultradeck edit`.  This will bring up the editor screen on [ultradeck.co](https://ultradeck.co).
+
+The editor screen is what you'll use to get a feel for how your deck looks, change colors + themes, and write presenter notes.
+
+3. **In a separate terminal, head to your directory and run `ultradeck watch`.**
+
+The `watch` command will watch both [ultradeck.co](https://ultradeck.co) and `deck.md` for changes, and bi-directionally update.
+
+Using your favorite editor, open `deck.md` and add a few slides to your deck:
+
+```markdown
+## Slide 1
+
+* Here's the first bullet
 
 ---
 
-If pushing:
+## Slide 2
 
-* updated_at Timestamp on client must be equal to or greater than updated_at timestamp on server
-* will need to do a GET request check for that
+* And here is another item
+```
 
-If pulling
+When you write the file, `ultradeck` will automatically push your changes to [ultradeck.co](https://ultradeck.co).  This will allow you to quickly iterate on your deck and get the general idea across.
 
-* updated_at on SERVER must be equal to or greater than updated_at timestamp on server
-* updated_at on
+## Command reference
+
+**Create and import decks**
+
+* `create`: Create a new deck
+* `import`: Import a deck from ultradeck.co to the current directory
+
+**Pushing and pulling changes**
+
+* `push`: push local changes to ultradeck.co
+* `pull`: pull remote deck changes from ultradeck.co (be sure to reload deck.md in your editor!)
+* `watch`: Watch for changes locally and remotely, and keep local + remote in sync
+
+**Opening pages on ultradeck.co**
+
+* `present`: Show the deck view on ultradeck.co for the current deck
+* `edit`: Show the edit deck view on ultradeck.co for the current deck
+
+**Other**
+
+* `check`: check to ensure you're correctly logged in
+* `upgrade`: Go to the pricing page to upgrade your account
+
+## Managing images and other assets
+
+Any images in the same directory as `deck.md` will be treated as [assets](https://docs.ultradeck.co/#assets) for the deck.  Assets are available for use in your slides.
+
+Example:
+
+```
+➜  tree -a
+.
+├── deck.md
+├── porsche.jpg
+└── .ud.json
+```
+
+You can reference the image in your deck like so:
+
+```markdown
+![](porsche.jpg)
+
+# Cool cars!
+```
+
+When you run `ultradeck push`, `porsche.jpg` will be uploaded to ultradeck.co as an asset.
+
+## Tips for using Git with an ultradeck directory
+
+You're encouraged to put `deck.md`, any assets, _and_ `.ud.json` under git control.
+
+## The ud.json file
+
+ud.json is a representation of your deck from ultradeck.co.  It includes information about slide themes, colors, presenter notes, custom CSS, etc.  When you run `ultradeck pull`, all information about the deck is synced over to `.ud.json`.
+
+This is why it's important to have `.ud.json` under git control, so you can always revert back changes to the actual presentation attributes of your deck, if you need to.
+
+## The deck.md file
+
+`ultradeck` always looks for a file called `deck.md` which is the Markdown representation of your deck.  There is no difference in the markdown needed to create decks.
+
+Slides in `deck.md` will be parsed with the [horizontal rule](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#hr) markdown command, specifically the 3 dashes: `---`.
+
+Example:
+
+```markdown
+# Slide 1
 
 ---
 
-# Aug 24 2017
+# Slide 2
 
-* push now works.
-* should now be easy to implement pull and watch, now that we're centering around pushing + pulling .ud.json.
-* [ ] the frontend is probably broken, because I changed the api sig on the backend to support the cli.
-* upgrade account works well (maybe rename "upgrade" to something else.)
+---
 
-# Aug 29 2017
+# Slide 3
+```
 
-* Aws temporary S3 creds working!
-* got a file to successfully upload with temp creds.
+## Keeping local decks in sync with ultradeck.co
 
-# Aug 30
+`ultradeck` does not support fancy merge algorithms.  It will simply copy whats on remote to local if you're running `ultradeck pull`, and will blindly push what's local to remote if you're running `ultradeck push`. This is why it's important to keep local decks under version control and being careful about the changes you make on ultradeck.co.
 
-* Got file syncing algorithm mostly hammered out, although it is not tested very well
-  * test uploading file on web view and see if it downloads locally
-  * web view is all fucked up, needs a lot of love
-* s3 is not uploading with public read, although I fixed it but did not test it
-* SyncAssets needs to be part of push (or pull?) need to think about this more.  right now it is an external command.
+## Importing a file from Deckset
 
-# Aug 31
+Ultradeck has some support for markdown files created for use with [Deckset](https://www.decksetapp.com/).  To use a Deckset file with ultradeck, do the following:
 
-* Separated out pulling remote assets and pushing local assets.  I don't see a situation where these should be run together with a single command.
-
-# Sep 1
-
-how do I definitively delete an asset?
-
-if pushing and the remote asset is there, but the local asset is not there, then prompt the user
-if pulling and the remote asset is not there, but the local asset is there, then do nothing.
-
-
-Implement this prompt library for input:  https://github.com/manifoldco/promptui
+1. In a new directory, create a new deck with `ultradeck create`
+2. copy the deckset markdown file to the directory, and name it `deck.md`
+3. run `ultradeck push`.
