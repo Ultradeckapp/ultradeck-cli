@@ -110,7 +110,7 @@ You're encouraged to put `deck.md`, any assets, _and_ `.ud.json` under git contr
 
 ## The ud.json file
 
-ud.json is a representation of your deck from ultradeck.co.  It includes information about slide themes, colors, presenter notes, custom CSS, etc.  When you run `ultradeck pull`, all information about the deck is synced over to `.ud.json`.
+`ud.json` is a representation of your deck from ultradeck.co.  It includes information about slide themes, colors, presenter notes, custom CSS, etc.  When you run `ultradeck pull`, all information about the deck is synced over to `.ud.json`.
 
 This is why it's important to have `.ud.json` under git control, so you can always revert back changes to the actual presentation attributes of your deck, if you need to.
 
