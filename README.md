@@ -1,7 +1,5 @@
 This is the command-line utility for [Ultradeck](https://ultradeck.co).  `ultradeck` allows you to create and manipulate decks straight from your local machine in a seamless way.
 
-When a directory is under ultradeck control...
-
 ## Installation
 
 There are a couple of options to install:
@@ -12,7 +10,15 @@ There are a couple of options to install:
 
 ## Quickstart tutorial
 
-1. **create a new deck using the cli.**,
+#### 1. Authenticate yourself.
+
+You'll need to authenticate yourself the first time you use `ultradeck`.
+
+1. Run `ultradeck auth`
+2. You'll be taken to ultradeck's login page, where you'll login via Github or Google.
+3. Once done, head back to your terminal. Ultradeck will have completed the auth and will have written a file at `~/.config/ultradeck/auth.json`, which includes your authentication token.
+
+#### 2. Create a new deck using the cli.
 
 Run `ultradeck create` in a new directory.  Ultradeck will ask you your deck's title, description, and visibility setting.
 
@@ -21,13 +27,13 @@ Run `ultradeck create` in a new directory.  Ultradeck will ask you your deck's t
 1. deck.md <- this is your deck.
 2. .ud.json <- this is the internal file that keeps your deck in sync with what is on the [ultradeck.co](https://ultradeck.co) webapp.
 
-2. **Open up the ultradeck editor webapp**
+#### 3. Open up the ultradeck editor webapp
 
 In your directory, run `ultradeck edit`.  This will bring up the editor screen on [ultradeck.co](https://ultradeck.co).
 
 The editor screen is what you'll use to get a feel for how your deck looks, change colors + themes, and write presenter notes.
 
-3. **In a separate terminal, head to your directory and run `ultradeck watch`.**
+#### 4. In a separate terminal, head to your directory and run `ultradeck watch`.
 
 The `watch` command will watch both [ultradeck.co](https://ultradeck.co) and `deck.md` for changes, and bi-directionally update.
 
@@ -49,21 +55,25 @@ When you write the file, `ultradeck` will automatically push your changes to [ul
 
 ## Command reference
 
+**Authentication**
+
+* `auth`:  Authenticate with ultradeck.  Once authenticated, you can use the `ultradeck` command in any directory without the need to re-authenticate each time.
+
 **Create and import decks**
 
 * `create`: Create a new deck
-* `import`: Import a deck from ultradeck.co to the current directory
+* `import`: Import a deck from [ultradeck.co](https://ultradeck.co) to the current directory
 
 **Pushing and pulling changes**
 
-* `push`: push local changes to ultradeck.co
-* `pull`: pull remote deck changes from ultradeck.co (be sure to reload deck.md in your editor!)
+* `push`: push local changes to [ultradeck.co](https://ultradeck.co)
+* `pull`: pull remote deck changes from [ultradeck.co](https://ultradeck.co) (be sure to reload deck.md in your editor!)
 * `watch`: Watch for changes locally and remotely, and keep local + remote in sync
 
 **Opening pages on ultradeck.co**
 
-* `present`: Show the deck view on ultradeck.co for the current deck
-* `edit`: Show the edit deck view on ultradeck.co for the current deck
+* `present`: Show the deck view on [ultradeck.co](https://ultradeck.co) for the current deck
+* `edit`: Show the edit deck view on [ultradeck.co](https://ultradeck.co) for the current deck
 
 **Other**
 
