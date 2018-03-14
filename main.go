@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/gammons/ultradeck-cli/client"
 	"github.com/manifoldco/promptui"
 	"github.com/skratchdot/open-golang/open"
-	"gitlab.com/gammons/ultradeck-cli/client"
 )
 
 const (
@@ -405,6 +405,7 @@ func (c *Client) openScreen(screenName string) {
 	if authConfig.AuthFileExists() {
 		userData := authConfig.ReadConfig()
 		shortUUID := deckConfigManager.GetDeckShortUUID()
+		fmt.Println("shortUUID is ", shortUUID)
 		slug := deckConfigManager.DeckConfig.Slug
 		fmt.Printf("Opening browser to %s screen...\n", screenName)
 		url := fmt.Sprintf("%s/users/%s/decks/%s/%s/%s", c.frontendURL(), userData.Username, shortUUID, slug, screenName)
