@@ -128,7 +128,7 @@ func (d *DeckConfigManager) GetDeckID() string {
 }
 
 func (d *DeckConfigManager) GetDeckShortUUID() string {
-	return d.DeckConfig.UUID[0:5]
+	return d.DeckConfig.UUID[0:13]
 }
 
 // reads the markdown from deck.md file and returns a slide array of slides
