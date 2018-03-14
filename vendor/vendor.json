@@ -11,7 +11,51 @@
 			"revision": ""
 		},
 		{
+			"path": "compress/flate",
+			"revision": ""
+		},
+		{
 			"path": "container/list",
+			"revision": ""
+		},
+		{
+			"path": "context",
+			"revision": ""
+		},
+		{
+			"path": "crypto/hmac",
+			"revision": ""
+		},
+		{
+			"path": "crypto/md5",
+			"revision": ""
+		},
+		{
+			"path": "crypto/rand",
+			"revision": ""
+		},
+		{
+			"path": "crypto/sha1",
+			"revision": ""
+		},
+		{
+			"path": "crypto/sha256",
+			"revision": ""
+		},
+		{
+			"path": "crypto/tls",
+			"revision": ""
+		},
+		{
+			"path": "crypto/x509",
+			"revision": ""
+		},
+		{
+			"path": "database/sql/driver",
+			"revision": ""
+		},
+		{
+			"path": "encoding/base64",
 			"revision": ""
 		},
 		{
@@ -19,7 +63,15 @@
 			"revision": ""
 		},
 		{
+			"path": "encoding/hex",
+			"revision": ""
+		},
+		{
 			"path": "encoding/json",
+			"revision": ""
+		},
+		{
+			"path": "encoding/xml",
 			"revision": ""
 		},
 		{
@@ -337,6 +389,10 @@
 			"revisionTime": "2018-03-14T17:21:22Z"
 		},
 		{
+			"path": "hash",
+			"revision": ""
+		},
+		{
 			"path": "io",
 			"revision": ""
 		},
@@ -353,6 +409,10 @@
 			"revision": ""
 		},
 		{
+			"path": "math/rand",
+			"revision": ""
+		},
+		{
 			"path": "mime",
 			"revision": ""
 		},
@@ -362,6 +422,10 @@
 		},
 		{
 			"path": "net/http",
+			"revision": ""
+		},
+		{
+			"path": "net/http/httputil",
 			"revision": ""
 		},
 		{
@@ -381,11 +445,23 @@
 			"revision": ""
 		},
 		{
+			"path": "path",
+			"revision": ""
+		},
+		{
+			"path": "path/filepath",
+			"revision": ""
+		},
+		{
 			"path": "reflect",
 			"revision": ""
 		},
 		{
 			"path": "regexp",
+			"revision": ""
+		},
+		{
+			"path": "runtime",
 			"revision": ""
 		},
 		{
