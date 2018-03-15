@@ -83,13 +83,13 @@ func main() {
 }
 
 func (c *Client) doAuth() {
-	c.Conn = client.NewWebsocketConnection()
 	channel := client.NewUUID()
+	c.Conn = client.NewWebsocketConnection(channel)
 
 	url := fmt.Sprintf("%s/beta-login?intermediate_token=%s", c.frontendURL(), channel)
 	open.Start(url)
 
-	c.Conn.RegisterListener(channel)
+	c.Conn.RegisterListener()
 
 	requestChan := make(chan *client.Request)
 	go c.Conn.Listen(requestChan)
@@ -97,7 +97,7 @@ func (c *Client) doAuth() {
 	for {
 		select {
 		case <-c.Conn.Interrupt:
-			c.debug("Interrupt")
+			client.DebugMsg("Interrupt")
 			os.Exit(0)
 			break
 		case <-c.Conn.Done:
@@ -302,8 +302,9 @@ func (c *Client) watch(resp *client.AuthCheckResponse) {
 	done := make(chan bool)
 	requestChan := make(chan *client.Request)
 
-	c.Conn = client.NewWebsocketConnection()
-	c.Conn.RegisterListener(resp.UUID)
+	c.Conn = client.NewWebsocketConnection(resp.UUID)
+	c.Conn.RegisterListener()
+	c.Conn.SetupPinger()
 	go c.Conn.Listen(requestChan)
 
 	// add a listener to listen for changes to .ud.json, to push to backend
@@ -321,10 +322,12 @@ func (c *Client) watch(resp *client.AuthCheckResponse) {
 				// a request came in from the backend, via the websocket channel.
 
 				// ensure the client id is not ours.  if it is, ignore. if not, do an update.
-				c.debug("request ClientID = " + req.ClientID)
-				c.debug("my ClientID = " + c.ClientID)
-				if req.ClientID != c.ClientID {
-					c.debug("No match, so initiating a pull")
+				client.DebugMsg("request ClientID = " + req.ClientID)
+				client.DebugMsg("request = " + req.Request)
+				client.DebugMsg("my ClientID = " + c.ClientID)
+
+				if req.ClientID != c.ClientID && req.Request != "pong" {
+					client.DebugMsg("No match, so initiating a pull")
 					c.pull(resp)
 				}
 
@@ -449,20 +452,10 @@ func (c *Client) dateCompare(d1 string, d2 string) int {
 }
 
 func (c *Client) processAuthResponse(req *client.Request) {
-	c.debug("processAuthResponse")
+	client.DebugMsg("processAuthResponse")
 	writer := client.NewAuthConfig(req.Data)
 	writer.WriteAuth()
 	c.Conn.CloseConnection()
-}
-
-func (c *Client) debug(msg string) {
-	if 1 == 0 {
-		log.Println(msg)
-	}
-}
-
-func (c *Client) info(msg string) {
-	log.Println(msg)
 }
 
 func (c *Client) backendURL() string {

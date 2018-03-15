@@ -104,6 +104,7 @@ func (c *WebsocketConnection) Listen(rchan chan<- *Request) {
 }
 
 func (c *WebsocketConnection) SetupPinger() {
+	DebugMsg("running SetupPinger")
 	req := &Request{
 		Request:  "ping",
 		ClientID: c.ClientID,
@@ -113,7 +114,7 @@ func (c *WebsocketConnection) SetupPinger() {
 
 	go func() {
 		for {
-			fmt.Println("Sending ping")
+			DebugMsg("Sending ping")
 			err := c.Conn.WriteMessage(websocket.TextMessage, []byte(pingMsg))
 			if err != nil {
 				log.Println("write err: ", err)
