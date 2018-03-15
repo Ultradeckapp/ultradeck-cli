@@ -1,4 +1,5 @@
-Version = "0.1"
+Version = ENV['VERSION']
+
 Envs = [
   {goos: "darwin", arch: "386"},
   {goos: "darwin", arch: "amd64"},
@@ -25,8 +26,6 @@ task :build_local do
   system "cp build/ultradeck /usr/local/bin/"
 end
 
-task default: :test
-
 desc "Builds release binaries"
 task :build_release do
   `rm -rf dist/#{Version}`
@@ -41,3 +40,5 @@ task :build_release do
     `rm -rf dist/#{Version}/ultradeck`
   end
 end
+
+task default: :test
