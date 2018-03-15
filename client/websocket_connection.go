@@ -120,7 +120,7 @@ func (c *WebsocketConnection) SetupPinger() {
 				log.Println("write err: ", err)
 				break
 			}
-			time.Sleep(5 * time.Second)
+			time.Sleep(20 * time.Second)
 		}
 	}()
 }
