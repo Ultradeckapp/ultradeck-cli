@@ -16,6 +16,8 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
+const Version = "0.2"
+
 const (
 	FrontendURL    = "https://app.ultradeck.co"
 	BackendURL     = "https://api.ultradeck.co"
@@ -417,7 +419,7 @@ func (c *Client) openScreen(screenName string) {
 }
 
 func (c *Client) printHelpScreen() {
-	fmt.Println("ULTRADECK v0.1")
+	fmt.Printf("UltraDeck v%s\n", Version)
 	fmt.Println("The ultradeck command-line utility allows you to create and manipulate decks straight from your local machine.")
 	fmt.Println("When a directory is under ultradeck control, there will be a .ud.json file, a deck.md file, and any picture assets that are part of the deck.\n")
 
