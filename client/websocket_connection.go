@@ -35,10 +35,11 @@ type WebsocketConnection struct {
 	Done      chan bool
 	Interrupt chan os.Signal
 	ClientID  string
+	Channel   string
 }
 
-func NewWebsocketConnection() *WebsocketConnection {
-	ws := &WebsocketConnection{ClientID: NewUUID()}
+func NewWebsocketConnection(channel string) *WebsocketConnection {
+	ws := &WebsocketConnection{ClientID: NewUUID(), Channel: channel}
 	ws.OpenConnection()
 	return ws
 }
@@ -70,11 +71,11 @@ func (c *WebsocketConnection) CloseConnection() {
 	close(c.Done)
 }
 
-func (c *WebsocketConnection) RegisterListener(channel string) {
+func (c *WebsocketConnection) RegisterListener() {
 	req := &Request{
 		Request:  RegisterListenerRequest,
 		ClientID: c.ClientID,
-		Channel:  channel,
+		Channel:  c.Channel,
 	}
 	authMsg, _ := json.Marshal(req)
 
@@ -100,6 +101,27 @@ func (c *WebsocketConnection) Listen(rchan chan<- *Request) {
 		json.Unmarshal(message, req)
 		rchan <- req
 	}
+}
+
+func (c *WebsocketConnection) SetupPinger() {
+	req := &Request{
+		Request:  "ping",
+		ClientID: c.ClientID,
+		Channel:  c.Channel,
+	}
+	pingMsg, _ := json.Marshal(req)
+
+	go func() {
+		for {
+			fmt.Println("Sending ping")
+			err := c.Conn.WriteMessage(websocket.TextMessage, []byte(pingMsg))
+			if err != nil {
+				log.Println("write err: ", err)
+				break
+			}
+			time.Sleep(5 * time.Second)
+		}
+	}()
 }
 
 func (c *WebsocketConnection) serverURL() string {
