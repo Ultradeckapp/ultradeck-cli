@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -152,17 +151,8 @@ func (c *Client) create(resp *client.AuthCheckResponse) {
 	prompt2 := promptui.Prompt{Label: "Description"}
 	description, _ := prompt2.Run()
 
-	isPublic := true
-	if resp.SubscriptionName != "free" {
-		prompt3 := promptui.Select{Label: "Is the deck public?", Items: []string{"Yes", "No"}}
-		_, isPublicResp, _ := prompt3.Run()
-		if isPublicResp != "Yes" {
-			isPublic = false
-		}
-	}
-
 	deckConfigManager := &client.DeckConfigManager{}
-	deck := deckConfigManager.NewDeck(name, description, isPublic)
+	deck := deckConfigManager.NewDeck(name, description)
 	httpClient := client.NewHttpClient(resp.Token)
 
 	createDeck := &CreateDeck{Deck: deck}
@@ -177,15 +167,7 @@ func (c *Client) create(resp *client.AuthCheckResponse) {
 	} else {
 		fmt.Println("Something went wrong with the request:")
 		dataString := string(jsonData)
-		if strings.Contains(dataString, "There is a limit") {
-			fmt.Println("You can only create 1 deck with a free account.")
-			fmt.Println("Run `ultradeck upgrade` to upgrade your account!")
-		} else if strings.Contains(dataString, "Must be true for free plan users") {
-			fmt.Println("Free accounts can only create public decks.")
-			fmt.Println("Run `ultradeck upgrade` to upgrade your account!")
-		} else {
-			fmt.Println(dataString)
-		}
+		fmt.Println(dataString)
 	}
 }
 

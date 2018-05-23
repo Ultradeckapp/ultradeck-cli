@@ -49,15 +49,19 @@ func TestParseMarkdownAddASlideAtBeginning(t *testing.T) {
 		Description: "Test",
 	}
 
+	slide1UUID := NewUUID()
 	slide1 := &Slide{
 		ID:             1,
+		UUID:           slide1UUID,
 		Position:       1,
 		Markdown:       "# Here is existing slide 1",
 		ColorVariation: 1,
 	}
 
+	slide2UUID := NewUUID()
 	slide2 := &Slide{
 		ID:             2,
+		UUID:           slide2UUID,
 		Position:       2,
 		Markdown:       "# Here is existing slide 2",
 		ColorVariation: 1,
@@ -76,11 +80,11 @@ func TestParseMarkdownAddASlideAtBeginning(t *testing.T) {
 	assert.Equal(1, slides[0].Position)
 
 	assert.Equal("# Here is existing slide 1", slides[1].Markdown)
-	assert.Equal(1, slides[1].ID)
+	assert.Equal(slide1UUID, slides[1].UUID)
 	assert.Equal(2, slides[1].Position)
 
 	assert.Equal("# Here is existing slide 2", slides[2].Markdown)
-	assert.Equal(2, slides[2].ID)
+	assert.Equal(slide2UUID, slides[2].UUID)
 	assert.Equal(3, slides[2].Position)
 }
 

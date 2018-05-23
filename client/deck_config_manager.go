@@ -18,7 +18,6 @@ type DeckConfig struct {
 	Title       string   `json:"title"`
 	Description string   `json:"description"`
 	Slug        string   `json:"slug"`
-	IsPublic    bool     `json:"is_public"`
 	UpdatedAt   string   `json:"updated_at"`
 	Slides      []*Slide `json:"slides_attributes"`
 	Assets      []*Asset `json:"assets_attributes"`
@@ -31,6 +30,7 @@ type Slide struct {
 	Markdown       string `json:"markdown"`
 	PresenterNotes string `json:"presenter_notes"`
 	ThemeName      string `json:"theme_name"`
+	Layout         string `json:"layout"`
 	ColorVariation int    `json:"color_variation"`
 }
 
@@ -51,11 +51,10 @@ func NewDeckConfigManager() *DeckConfigManager {
 	return manager
 }
 
-func (d *DeckConfigManager) NewDeck(title string, description string, isPublic bool) *DeckConfig {
+func (d *DeckConfigManager) NewDeck(title string, description string) *DeckConfig {
 	deck := &DeckConfig{
 		UUID:        NewUUID(),
 		Title:       title,
-		IsPublic:    isPublic,
 		Description: description,
 		Assets:      []*Asset{},
 	}
