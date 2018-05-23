@@ -26,6 +26,11 @@ task :build_local do
   system "cp build/ultradeck /usr/local/bin/"
 end
 
+desc "Rebuilds vendor dir, assumes only a vendor/vendor.json file in ./vendor"
+task :rebuild_vendor do
+  system "govendor fetch +missing,^program"
+end
+
 desc "Builds release binaries"
 task :build_release do
   `rm -rf dist/#{Version}`
