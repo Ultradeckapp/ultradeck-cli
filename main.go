@@ -85,6 +85,9 @@ func main() {
 
 func (c *Client) doAuth() {
 	channel := client.NewUUID()
+
+	client.DebugMsg(fmt.Sprintf("Using channel: %s\n", channel))
+
 	c.Conn = client.NewWebsocketConnection(channel)
 
 	url := fmt.Sprintf("%s/beta-login?intermediate_token=%s", c.frontendURL(), channel)

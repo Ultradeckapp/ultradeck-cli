@@ -39,7 +39,9 @@ type WebsocketConnection struct {
 }
 
 func NewWebsocketConnection(channel string) *WebsocketConnection {
-	ws := &WebsocketConnection{ClientID: NewUUID(), Channel: channel}
+	uuid := NewUUID()
+
+	ws := &WebsocketConnection{ClientID: uuid, Channel: channel}
 	ws.OpenConnection()
 	return ws
 }

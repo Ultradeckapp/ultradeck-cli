@@ -170,6 +170,7 @@ func (d *DeckConfigManager) ParseMarkdown(markdown string) []*Slide {
 			newSlide.UUID = slideFromConfig.UUID
 			newSlide.PresenterNotes = slideFromConfig.PresenterNotes
 			newSlide.ThemeName = slideFromConfig.ThemeName
+			newSlide.Layout = slideFromConfig.Layout
 			newSlide.ColorVariation = slideFromConfig.ColorVariation
 		} else if firstSlide != nil {
 			newSlide.UUID = NewUUID()
